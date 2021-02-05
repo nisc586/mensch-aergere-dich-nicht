@@ -1,9 +1,9 @@
 class Field():
-    def __init__(self, val, access=""):
+    def __init__(self, val, color=""):
         self.value = val
-        self.access = access
-        self.identifier = f"{val}{access}"
-        self.is_end_field = (val > 0) and (access != "")
+        self.access = color
+        self.identifier = f"{val}{color}"
+        self.is_end_field = (val > 0) and (color != "")
         return
 
 

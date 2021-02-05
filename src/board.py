@@ -2,12 +2,11 @@ from piece import Piece
 from field import Field
 
 class Board():
-    def __init__(self, colors="g"):
+    def __init__(self, colors):
         assert set(colors) <= set("rgby")
         self.PIECES_PER_PLAYER = 4
         self.BOARD_LENGTH = 40
         self.MAX_FIELDS = self.BOARD_LENGTH + self.PIECES_PER_PLAYER
-
         self.colors = colors
         self.positions = {}
         self.set_up()
@@ -15,38 +14,40 @@ class Board():
 
     def set_up(self):
         """Creates pieces for each color and puts them on their starting fields"""
+        self.start_fields = {
+            "g": Field(1),
+            "r": Field(11),
+            "b": Field(21),
+            "y": Field(31)
+        }
+        
+        self.last_fields = {
+            "g": Field(44, "g"),
+            "r": Field(14, "r"),
+            "b": Field(24, "b"),
+            "y": Field(34, "y")
+        }
+
         for col in self.colors:
             home = Field(0, col)
-            if col == "g":
-                start = Field(1)
-                finish = Field(44, "g")
-            elif col == "r":
-                start = Field(11)
-                finish = Field(14, "r")
-            elif col == "b":
-                start = Field(21)
-                finish = Field(24, "b")
-            elif col == "y":
-                start = Field(31)
-                finish = Field(34, "y")
-            else:
-                raise AssertionError("unreachable")
+            start = self.start_fields[col]
+            finish = self.last_fields[col]
 
             for num in range(1, self.PIECES_PER_PLAYER + 1):
                 p = Piece(col, num, home, start, finish)
                 self.positions[p] = start if num==1 else home
 
 
-    def find_move(self, piece, dice, dice_max):
+    def find_move(self, piece, num, *, leave_base=False):
         """Returns new position if piece can reach it. None otherwise"""
         pos = self.positions[piece]
 
         # Calculate next field value
-        new_value = pos.value + dice
+        new_value = pos.value + num
         distance_to_finish = piece.finish.value - new_value
 
         if pos == piece.home:  # Special case: leave home base
-                new_field = piece.start if dice == dice_max else None
+                new_field = piece.start if leave_base else None
 
         elif new_value > self.MAX_FIELDS:
             return
@@ -73,16 +74,6 @@ class Board():
             return new_field
 
 
-    def collect_legal_moves(self, dice, dice_max):
-        """Returns all possible moves for given pieces. May be empty list"""
-        moves = list()
-        for piece, pos in self.positions.items():
-            new_pos = self.find_move(piece, dice, dice_max)
-            if new_pos:
-                moves.append((piece, new_pos))
-        return moves
-
-
     def move_piece(self, piece, new_pos):
         self.positions[piece] = new_pos
 
@@ -91,21 +82,5 @@ class Board():
         return set(self.positions.values())
 
 
-    def has_winner(self):
-        """Checks if one color occupies all end fields."""
-        for col in self.colors:
-            if col == "g":
-                start_val = 1
-            elif col == "r":
-                start_val = 11
-            elif col == "b":
-                start_val = 21
-            elif col == "y":
-                start_val = 31
-            else:
-                raise AssertionError("unreachable")
-            end_fields = {Field(start_val + i, col) for i in range(1, self.PIECES_PER_PLAYER+1)}
-            if end_fields <= self.get_occupied():
-                return True
-        else:
-            return False
+    def get_pieces(self, col):
+        return [p for p in self.positions if p.color == col]
