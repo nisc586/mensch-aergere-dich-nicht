@@ -3,7 +3,10 @@ import random
 is_running = True
 pos1 = 1
 pos2 = 0
-print(f"{pos1=}, {pos2=}")
+pos3 = 0
+pos4 = 0
+
+print(f"{pos1=}, {pos2=}, {pos3=}, {pos4=}")
 turn = 0
 
 MAX_FIELDS = 22
@@ -11,6 +14,15 @@ DICE_MIN, DICE_MAX = 1, 6
 
 def find_move(pos, dice, occupied, max_fields):
     """Returns new position if piece can reach it. None otherwise"""
+    # Special case: leave home base
+    if pos == 0:
+        if dice == DICE_MAX:
+            new_pos = 1
+            if new_pos not in occupied:
+                return new_pos
+        else:
+            return
+
     new_pos = pos + dice
     if new_pos > max_fields:
         # piece can't move
@@ -24,8 +36,8 @@ def find_move(pos, dice, occupied, max_fields):
 
 
 while is_running:
-    occupied = {pos1, pos2}
-    if occupied == {MAX_FIELDS, MAX_FIELDS - 1}:
+    occupied = {pos1, pos2, pos3, pos4}
+    if occupied == {MAX_FIELDS, MAX_FIELDS - 1, MAX_FIELDS - 2, MAX_FIELDS - 3}:
         print("Game over")
         break
 
@@ -42,6 +54,14 @@ while is_running:
     new_pos2 = find_move(pos2, dice, occupied, MAX_FIELDS)
     if new_pos2:
         legal_moves.add(("piece2", new_pos2))
+    
+    new_pos3 = find_move(pos3, dice, occupied, MAX_FIELDS)
+    if new_pos3:
+        legal_moves.add(("piece3", new_pos3))
+    
+    new_pos4 = find_move(pos4, dice, occupied, MAX_FIELDS)
+    if new_pos4:
+        legal_moves.add(("piece4", new_pos4))
 
     print(f"{legal_moves=}")
 
@@ -54,13 +74,19 @@ while is_running:
         elif piece == "piece2":
             pos2 = new_pos2
             print(f"{piece} -> {new_pos2}", end="\t")
+        elif piece == "piece3":
+            pos3 = new_pos3
+            print(f"{piece} -> {new_pos3}", end="\t")
+        elif piece == "piece4":
+            pos4 = new_pos4
+            print(f"{piece} -> {new_pos4}", end="\t")
 
         else:
             raise AssertionError("unreachable")
     else:
         print("No moves available")
 
-    print(f"{pos1=}, {pos2=}")
+    print(f"{pos1=}, {pos2=}, {pos3=}, {pos4=}")
     print()
     turn += 1
 
