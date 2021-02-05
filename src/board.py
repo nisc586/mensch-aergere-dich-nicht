@@ -14,14 +14,14 @@ class Board():
 
     def set_up(self):
         """Creates pieces for each color and puts them on their starting fields"""
-        self.start_fields = {
+        start_fields = {
             "g": Field(1),
             "r": Field(11),
             "b": Field(21),
             "y": Field(31)
         }
         
-        self.last_fields = {
+        last_fields = {
             "g": Field(44, "g"),
             "r": Field(14, "r"),
             "b": Field(24, "b"),
@@ -30,8 +30,8 @@ class Board():
 
         for col in self.colors:
             home = Field(0, col)
-            start = self.start_fields[col]
-            finish = self.last_fields[col]
+            start = start_fields[col]
+            finish = last_fields[col]
 
             for num in range(1, self.PIECES_PER_PLAYER + 1):
                 p = Piece(col, num, home, start, finish)
@@ -77,6 +77,9 @@ class Board():
     def move_piece(self, piece, new_pos):
         self.positions[piece] = new_pos
 
+
+    def move_home(self, piece):
+        self.positions[piece] = piece.home
 
     def get_occupied(self):
         return set(self.positions.values())
