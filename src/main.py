@@ -1,5 +1,6 @@
 from board import Board
 import random
+import time
 
 DICE_MIN, DICE_MAX = 1, 6
 
@@ -14,12 +15,14 @@ while is_running:
         break
 
     dice = random.randint(DICE_MIN, DICE_MAX)
-    print(f"{dice=}", end="\t")
+    print(f"{dice=}")
 
     # Which moves are available?
     legal_moves = board.collect_legal_moves(dice, DICE_MAX)
 
-    print(f"{legal_moves=}")
+    for piece, new_position in legal_moves:
+        print(piece, "->", new_position)
+    print()
 
     # Pick a random move
     if legal_moves:
@@ -30,6 +33,7 @@ while is_running:
         print("No moves available")
 
     turn += 1
+    time.sleep(1)
     print()
 
 print(f"{turn=}")
