@@ -1,36 +1,48 @@
 from board import Board
 import random
+from string import ascii_lowercase
 
 class Game():
-    def __init__(self):
-        self.colors = "g"
+    def __init__(self, players):
+        self.players = players
+        self.colors = "".join([player.color for player in players])
         self.board = Board(self.colors)
         self.PIECES_PER_PLAYER = 4
         self.DICE_MAX = 6
-        self.main()
 
 
     def main(self):
+        player_index = 0
+        print("Game starts.")
         while True:
+            active_player = self.players[player_index]
             if self.has_winner():
                 print("Game over.")
                 return
             
-            color = "g"
+            color = active_player.color
             self.dice = random.randint(1, self.DICE_MAX)
-            print("Rolled a", self.dice)
+            print(active_player.name, "rolled a", self.dice)
 
             pieces = self.board.get_pieces(color)
             legal_moves = self.collect_legal_moves(pieces)
 
             if legal_moves:
-                decided_piece, decided_target = self.pick_move(legal_moves)
-                print("Picked:", decided_piece, "to", decided_target)
-                self.board.move_piece(decided_piece, decided_target)
+                response = self.pick_move(legal_moves)
+                if not response:
+                    return
+                else:
+                    decided_piece, decided_target = response
+                    print(active_player.name, "picked:", decided_piece, "to", decided_target)
+                    self.board.move_piece(decided_piece, decided_target)
             else:
                 print("No moves available.")
 
             print()
+            if self.dice != self.DICE_MAX:
+                player_index = (player_index + 1) % len(self.players)
+            else:
+                print(active_player.name, "goes again!")
 
 
     def collect_legal_moves(self, pieces):
@@ -61,11 +73,27 @@ class Game():
     
     def pick_move(self, moves):
         print("Pick a move:")
-        for piece, target in moves:
-            print("\t", piece, "->", target)
-        return random.choice(moves)
+        for option, (piece, target) in zip(ascii_lowercase, moves):
+            print(option, "\t", piece, "->", target)
+        
+        while True:
+            response = input(">").lower()
+            try:
+                picked_move = moves[ascii_lowercase.index(response)]
+                break
+            except (IndexError, ValueError):
+                if response == "quit":
+                    return
+                else:
+                    print("Try again... or type 'quit' to quit the game.")
+        return picked_move
+
 
 
 if __name__ == "__main__":
-    game = Game()
+    from collections import namedtuple
+    Player = namedtuple("Player", "name color")
+    alice = Player("Alice", "g")
+    bob = Player("Bob", "r")
+    game = Game([alice, bob])
     game.main()
