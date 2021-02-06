@@ -74,7 +74,7 @@ class Game():
     def pick_move(self, moves):
         print("Pick a move:")
         for option, (piece, target) in zip(ascii_lowercase, moves):
-            print(option, "\t", piece, "->", target)
+            print(option, "\t", piece, ":", self.board.positions[piece], "->", target)
         
         while True:
             response = input(">").lower()
