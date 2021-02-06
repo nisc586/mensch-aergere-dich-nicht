@@ -1,12 +1,19 @@
 class Field():
-    def __init__(self, identifier, *,color="", cost_to_leave=1):
+    def __init__(self, identifier, color=""):
         self.color = color
         self.identifier = identifier
-        self.cost = cost_to_leave
+        self.cost = 1 if not identifier.startswith("A") else 6
         return
 
     def is_end_field(self):
         return self.identifier.startswith("B")
+
+    def allow_color(self, col):
+        """Returns true if a piece of the given color may step on the field."""
+        if self.color:
+            return self.color == col
+        else:
+            return True
 
     def __str__(self):
         return self.identifier

@@ -25,8 +25,8 @@ class Board():
         self.start_fields = {"g": Field("1"), "r": Field("11"), "b": Field("21"), "y": Field("31")}  # starting field for each color
         entry_fields = {"g": Field("40"), "r": Field("10"), "b": Field("20"), "y": Field("30")}  # fields that point to first end field
 
-        for col in self.colors:  # all special fields
-            self.graph[Field("A", cost_to_leave=self.MAX_DICE, color=col)].append(self.start_fields[col])
+        for col in "rgby":  # all special fields
+            self.graph[Field("A", color=col)].append(self.start_fields[col])
 
             for j in range(1, self.PIECES_PER_PLAYER):
                 self.graph[Field("B" + str(j), color=col)].append(Field("B" + str(j+1), color=col))
@@ -38,7 +38,7 @@ class Board():
         """Creates pieces for each color and puts them on their starting fields"""
 
         for col in self.colors:
-            home = Field("A", color=col, cost_to_leave=self.MAX_DICE)
+            home = Field("A", color=col)
 
             for num in range(1, self.PIECES_PER_PLAYER + 1):
                 p = Piece(col, num, home)
@@ -48,13 +48,13 @@ class Board():
     def find_reachable_fields(self, pos, n):
         """Does a recursive search for reachable fields given a number of steps"""
         if n == 0:
-            return [pos]
+            return {pos}
         elif n < pos.cost:
-            return []
+            return set()
         else:
-            ret = []
+            ret = set()
             for child in self.graph[pos]:
-                ret.extend(self.find_reachable_fields(child, n - pos.cost))
+                ret | self.find_reachable_fields(child, n - pos.cost)
             return ret
 
 
@@ -74,7 +74,8 @@ class Board():
                         break
             else:
                 # pos is free
-                suggested.append(pos)
+                if pos.allow_color(piece.color):
+                    suggested.append(pos)
         return suggested
 
 
