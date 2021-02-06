@@ -1,10 +1,8 @@
 class Piece():
-    def __init__(self, color, number, home, start, finish):
+    def __init__(self, color, number, home):
         assert color in {"r", "g", "b", "y"}, "invalid color {}".format(color)
         self.color = color
         self.home = home
-        self.start = start
-        self.finish = finish
         self.number = number
 
 
@@ -21,5 +19,5 @@ class Piece():
 
 
 if __name__ == "__main__":
-    piece = Piece("g", 1, None, None)
+    piece = Piece("g", 1, None)
     print(piece)

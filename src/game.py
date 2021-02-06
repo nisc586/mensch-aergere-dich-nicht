@@ -14,10 +14,11 @@ class Game():
         while True:
             if self.has_winner():
                 print("Game over.")
-                break
+                return
             
             color = "g"
             self.dice = random.randint(1, self.DICE_MAX)
+            print("Rolled a", self.dice)
 
             pieces = self.board.get_pieces(color)
             legal_moves = self.collect_legal_moves(pieces)
@@ -36,16 +37,12 @@ class Game():
         """Returns all possible moves for given pieces. May be empty list"""
         moves = list()
         for piece in pieces:
-            new_pos = self.board.find_move(
-                        piece, self.dice,
-                        leave_base = self.dice==self.DICE_MAX
-                        )
-            if new_pos:
-                moves.append((piece, new_pos))
+            new_positions = self.board.suggest_moves(piece, self.dice)
+            if new_positions:
+                moves.extend([(piece, new_pos) for new_pos in new_positions])
         return moves
 
 
-    def pick_move(self, moves):
         print("Available moves:")
         for piece, new_pos in moves:
             print(piece, ":", self.board.positions[piece], "->", new_pos)
@@ -57,9 +54,16 @@ class Game():
         """Checks if one color occupies all end fields."""
         counter = {"r":0, "g":0, "y":0, "b": 0}
         for field in self.board.get_occupied():
-            if field.is_end_field:
-                counter[field.access] += 1
+            if field.is_end_field():
+                counter[field.color] += 1
         return self.PIECES_PER_PLAYER in counter.values()
+
+    
+    def pick_move(self, moves):
+        print("Pick a move:")
+        for piece, target in moves:
+            print("\t", piece, "->", target)
+        return random.choice(moves)
 
 
 if __name__ == "__main__":

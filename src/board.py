@@ -1,5 +1,6 @@
 from piece import Piece
 from field import Field
+from collections import defaultdict
 
 class Board():
     def __init__(self, colors):
@@ -9,69 +10,72 @@ class Board():
         self.MAX_FIELDS = self.BOARD_LENGTH + self.PIECES_PER_PLAYER
         self.colors = colors
         self.positions = {}
+        self.build_graph()
         self.set_up()
+
+
+    def build_graph(self):
+        """Creates a board by building a graph where each field maps to other fields"""
+        self.graph = defaultdict(list)
+
+        for i in range(1, self.BOARD_LENGTH):  # all normal fields
+            self.graph[Field(str(i))].append(Field(str(i+1)))
+        self.graph[Field(str(self.BOARD_LENGTH))].append(Field("1"))
+
+        self.start_fields = {"g": Field("1"), "r": Field("11"), "b": Field("21"), "y": Field("31")}  # starting field for each color
+        entry_fields = {"g": Field("40"), "r": Field("10"), "b": Field("20"), "y": Field("30")}  # fields that point to first end field
+
+        for col in self.colors:  # all special fields
+            self.graph[Field("A", cost_to_leave=6, color=col)].append(self.start_fields[col])
+
+            for j in range(1, self.PIECES_PER_PLAYER):
+                self.graph[Field("B" + str(j), color=col)].append(Field("B" + str(j+1), color=col))
+            
+            self.graph[entry_fields[col]].append(Field("B1", color=col))
 
 
     def set_up(self):
         """Creates pieces for each color and puts them on their starting fields"""
-        start_fields = {
-            "g": Field(1),
-            "r": Field(11),
-            "b": Field(21),
-            "y": Field(31)
-        }
-        
-        last_fields = {
-            "g": Field(44, "g"),
-            "r": Field(14, "r"),
-            "b": Field(24, "b"),
-            "y": Field(34, "y")
-        }
 
         for col in self.colors:
-            home = Field(0, col)
-            start = start_fields[col]
-            finish = last_fields[col]
+            home = Field("A", color=col, cost_to_leave=6)
 
             for num in range(1, self.PIECES_PER_PLAYER + 1):
-                p = Piece(col, num, home, start, finish)
-                self.positions[p] = start if num==1 else home
+                p = Piece(col, num, home)
+                self.positions[p] = self.start_fields[col] if num==1 else home
 
 
-    def find_move(self, piece, num, *, leave_base=False):
-        """Returns new position if piece can reach it. None otherwise"""
-        pos = self.positions[piece]
-
-        # Calculate next field value
-        new_value = pos.value + num
-        distance_to_finish = piece.finish.value - new_value
-
-        if pos == piece.home:  # Special case: leave home base
-                new_field = piece.start if leave_base else None
-
-        elif new_value > self.MAX_FIELDS:
-            return
-
-        elif 0 <= distance_to_finish < self.PIECES_PER_PLAYER:  # Special case: right before finish
-            if (pos.value > piece.finish.value - self.PIECES_PER_PLAYER) and not pos.is_end_field:
-                return
-            else:
-                new_field = Field(new_value, piece.color)
-
-        else:  # Normal case
-            if pos.is_end_field:
-                return
-            else:
-                new_field = Field(new_value)
-
-        # Handle collisions
-        for p, f in self.positions.items():
-            if new_field == f:
-                if piece.color == p.color:
-                    # Collision with own color
-                    return
+    def find_reachable_fields(self, pos, n):
+        """Does a recursive search for reachable fields given a number of steps"""
+        if n == 0:
+            return [pos]
+        elif n < pos.cost:
+            return []
         else:
-            return new_field
+            ret = []
+            for child in self.graph[pos]:
+                ret.extend(self.find_reachable_fields(child, n - pos.cost))
+            return ret
+
+
+    def suggest_moves(self, piece, number):
+        """Returns list of fields a piece can move on given a number of steps"""
+        reachable = self.find_reachable_fields(self.positions[piece], number)
+
+        suggested = []
+        for pos in reachable:
+            for other_piece, other_pos in self.positions.items():
+                if pos == other_pos:
+                    if piece.color != other_piece.color:
+                        # beat other color
+                        suggested.append(pos)
+                    else:
+                        # blocked by own color
+                        break
+            else:
+                # pos is free
+                suggested.append(pos)
+        return suggested
 
 
     def move_piece(self, piece, new_pos):
@@ -80,6 +84,7 @@ class Board():
 
     def move_home(self, piece):
         self.positions[piece] = piece.home
+
 
     def get_occupied(self):
         return set(self.positions.values())
