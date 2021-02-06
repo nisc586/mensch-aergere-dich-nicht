@@ -7,7 +7,7 @@ class Board():
         assert set(colors) <= set("rgby")
         self.PIECES_PER_PLAYER = 4
         self.BOARD_LENGTH = 40
-        self.MAX_FIELDS = self.BOARD_LENGTH + self.PIECES_PER_PLAYER
+        self.MAX_DICE = 6
         self.colors = colors
         self.positions = {}
         self.build_graph()
@@ -26,7 +26,7 @@ class Board():
         entry_fields = {"g": Field("40"), "r": Field("10"), "b": Field("20"), "y": Field("30")}  # fields that point to first end field
 
         for col in self.colors:  # all special fields
-            self.graph[Field("A", cost_to_leave=6, color=col)].append(self.start_fields[col])
+            self.graph[Field("A", cost_to_leave=self.MAX_DICE, color=col)].append(self.start_fields[col])
 
             for j in range(1, self.PIECES_PER_PLAYER):
                 self.graph[Field("B" + str(j), color=col)].append(Field("B" + str(j+1), color=col))
@@ -38,7 +38,7 @@ class Board():
         """Creates pieces for each color and puts them on their starting fields"""
 
         for col in self.colors:
-            home = Field("A", color=col, cost_to_leave=6)
+            home = Field("A", color=col, cost_to_leave=self.MAX_DICE)
 
             for num in range(1, self.PIECES_PER_PLAYER + 1):
                 p = Piece(col, num, home)
@@ -79,6 +79,11 @@ class Board():
 
 
     def move_piece(self, piece, new_pos):
+        if new_pos in self.get_occupied():
+            for other_piece, occupied_pos in self.positions.items():
+                if new_pos == occupied_pos:
+                    assert piece.color != other_piece.color, "field {} is blocked by same color".format(new_pos)
+                    self.move_home(other_piece)
         self.positions[piece] = new_pos
 
 
