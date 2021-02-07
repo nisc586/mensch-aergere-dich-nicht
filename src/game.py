@@ -58,13 +58,6 @@ class Game():
         return moves
 
 
-        print("Available moves:")
-        for piece, new_pos in moves:
-            print(piece, ":", self.board.positions[piece], "->", new_pos)
-        import time; time.sleep(1)
-        return random.choice(moves)
-
-
     def has_winner(self):
         """Checks if one color occupies all end fields."""
         counter = {"r":0, "g":0, "y":0, "b": 0}

@@ -69,6 +69,7 @@ class Board():
                     if piece.color != other_piece.color:
                         # beat other color
                         suggested.append(pos)
+                        break
                     else:
                         # blocked by own color
                         break
