@@ -12,6 +12,7 @@ class Game():
 
 
     def main(self):
+        """Implements game loop for a full round of 'Mensch ärgere dich nicht'"""
         player_index = 0
         print("Game starts.")
         while True:
@@ -80,7 +81,7 @@ class Game():
         for option, (piece, target) in zip(ascii_lowercase, moves):
             print(option, "\t", piece, ":", self.board.positions[piece], "->", target)
         print()
-        
+
         while True:
             response = input("> ").lower().strip()
             if len(response) == 1 and response in ascii_lowercase[0:n]:

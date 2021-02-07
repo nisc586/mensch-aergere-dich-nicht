@@ -14,7 +14,7 @@ def main():
         print("Your options")
         print("\t start")
         print("\t quit")
-        response = input(">")
+        response = input("> ")
         if response == "start":
             game.main()
         elif response == "quit":
