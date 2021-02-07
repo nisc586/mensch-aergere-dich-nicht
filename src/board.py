@@ -59,8 +59,13 @@ class Board():
 
 
     def suggest_moves(self, piece, number):
-        """Returns list of fields a piece can move on given a number of steps"""
-        reachable = self.find_reachable_fields(self.positions[piece], number)
+        """Returns a list of possible moves a piece can make, given a number.
+        
+        A move is represented as a tuple of a target field and a description.
+        Returns an empty list if no moves ara available.
+        """
+        old_pos = self.positions[piece]
+        reachable = self.find_reachable_fields(old_pos, number)
 
         suggested = []
         for pos in reachable:
@@ -68,7 +73,7 @@ class Board():
                 if pos == other_pos:
                     if piece.color != other_piece.color:
                         # beat other color
-                        suggested.append(pos)
+                        suggested.append((pos, "beat {}".format(other_piece)))
                         break
                     else:
                         # blocked by own color
@@ -76,7 +81,13 @@ class Board():
             else:
                 # pos is free
                 if pos.allow_color(piece.color):
-                    suggested.append(pos)
+                    if pos.is_end_field():
+                        desc = "reach end field"
+                    elif old_pos.cost > 1:
+                        desc = "leave base"
+                    else:
+                        desc = "normal move"
+                    suggested.append((pos, desc))
         return suggested
 
 

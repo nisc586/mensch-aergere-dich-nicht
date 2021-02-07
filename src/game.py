@@ -52,9 +52,9 @@ class Game():
         """Returns all possible moves for given pieces. May be empty list"""
         moves = list()
         for piece in pieces:
-            new_positions = self.board.suggest_moves(piece, self.dice)
-            if new_positions:
-                moves.extend([(piece, new_pos) for new_pos in new_positions])
+            suggested = self.board.suggest_moves(piece, self.dice)
+            if suggested:
+                moves.extend([(piece, new_pos, desc) for new_pos, desc in suggested])
         return moves
 
 
@@ -71,14 +71,15 @@ class Game():
         """Let the user pick a move, show the board or quit the game"""
         n = len(moves)
         print("Pick a move:")
-        for option, (piece, target) in zip(ascii_lowercase, moves):
-            print(option, "\t", piece, ":", self.board.positions[piece], "->", target)
+        for option, (piece, target, description) in zip(ascii_lowercase, moves):
+            print(option, "\t", piece, ":", self.board.positions[piece], "->", target, f"({description})")
         print()
 
         while True:
             response = input("> ").lower().strip()
             if len(response) == 1 and response in ascii_lowercase[0:n]:
-                return moves[ascii_lowercase.index(response)]
+                piece, target, _ = moves[ascii_lowercase.index(response)]
+                return piece, target
             elif response == "show":
                 print(self.board)
                 print()
