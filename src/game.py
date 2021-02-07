@@ -28,7 +28,9 @@ class Game():
             legal_moves = self.collect_legal_moves(pieces)
 
             if legal_moves:
-                response = self.pick_move(legal_moves)
+                # USER INPUT HERE
+                response = self.user_input(legal_moves)
+                #----------------
                 if not response:
                     return
                 else:
@@ -71,23 +73,26 @@ class Game():
         return self.PIECES_PER_PLAYER in counter.values()
 
     
-    def pick_move(self, moves):
+    def user_input(self, moves):
+        """Let the user pick a move, show the board or quit the game"""
+        n = len(moves)
         print("Pick a move:")
         for option, (piece, target) in zip(ascii_lowercase, moves):
             print(option, "\t", piece, ":", self.board.positions[piece], "->", target)
+        print()
         
         while True:
-            response = input(">").lower()
-            try:
-                picked_move = moves[ascii_lowercase.index(response)]
-                break
-            except (IndexError, ValueError):
-                if response == "quit":
-                    return
-                else:
-                    print("Try again... or type 'quit' to quit the game.")
-        return picked_move
-
+            response = input("> ").lower().strip()
+            if len(response) == 1 and response in ascii_lowercase[0:n]:
+                return moves[ascii_lowercase.index(response)]
+            elif response == "show":
+                print(self.board)
+                print()
+                continue
+            elif response == "quit":
+                return
+            else:
+                print("Try again... or type 'quit' to quit the game, or 'show' to show the board.")
 
 
 if __name__ == "__main__":

@@ -32,7 +32,7 @@ def test_reachable_from_base():
 def test_not_reachable_from_base():
     board = Board("rgby")
     field = Field("A", color="r")
-    assert {} == board.find_reachable_fields(field, 3)
+    assert set() == board.find_reachable_fields(field, 3)
 
 
 def test_leave_base_normal():
@@ -57,8 +57,8 @@ def test_end_field_free():
 
     board.move_piece(piece, Field("40"))
     suggested_moves = board.suggest_moves(piece, 4)
-    assert len(suggested_moves)
-    assert [Field("4"), Field("B4", color="g")] == suggested_moves
+    assert 2 == len(suggested_moves)
+    assert set([Field("B4", color="g"), Field("4")]) == set(suggested_moves)
 
 
 def test_end_field_blocked():

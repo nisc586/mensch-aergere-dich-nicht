@@ -6,7 +6,9 @@ def main():
     Player = namedtuple("Player", "name color")
     player1 = Player("Alice", "g")
     player2 = Player("Bob", "r")
-    players = [player1, player2]
+    player3 = Player("Claire", "b")
+    player4 = Player("Dirk", "y")
+    players = [player1, player2, player3, player4]
     game = Game(players)
     while True:
         print("Your options")

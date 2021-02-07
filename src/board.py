@@ -54,7 +54,7 @@ class Board():
         else:
             ret = set()
             for child in self.graph[pos]:
-                ret | self.find_reachable_fields(child, n - pos.cost)
+                ret |= self.find_reachable_fields(child, n - pos.cost)
             return ret
 
 
@@ -98,3 +98,10 @@ class Board():
 
     def get_pieces(self, col):
         return [p for p in self.positions if p.color == col]
+
+    def __str__(self):
+        return "\n".join([
+                    "\t{} is on {}".format(piece, field)
+                    for piece, field in self.positions.items()
+                    ])
+
