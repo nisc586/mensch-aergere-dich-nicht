@@ -9,7 +9,6 @@ class Main():
         player1 = Player("Alice", "g")
         player2 = Player("Bob", "r")
         self.players = {player1, player2}
-        self.main()
 
 
     def main(self):
@@ -73,7 +72,7 @@ class Main():
             return
         self.players.discard(old_player)
         self.players.add(new_player)
-        print("Renamed", old_player)
+        print("Renamed:", old_player)
 
 
     def add_player(self, name):
@@ -117,4 +116,5 @@ class Main():
 
 
 if __name__ == "__main__":
-    Main()
+    main = Main()
+    main.main()
