@@ -1,0 +1,9 @@
+# Cache
+.pytest_cache
+__pycache__
+
+# Pip File
+*.egg-info
+
+# Virtual Env
+venv

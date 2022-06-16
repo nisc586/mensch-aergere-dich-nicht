@@ -1,4 +1,4 @@
-from board import Board
+from .board import Board
 import random
 from string import ascii_lowercase
 

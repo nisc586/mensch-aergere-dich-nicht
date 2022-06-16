@@ -1,5 +1,5 @@
 import pytest
-from main import Player, Main
+from mensch.main import Player, Main
 
 def test_rename(capsys):
     main = Main()

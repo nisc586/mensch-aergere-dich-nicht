@@ -1,7 +1,7 @@
 import pytest
-from board import Board
-from field import Field
-from piece import Piece
+from mensch.board import Board
+from mensch.field import Field
+from mensch.piece import Piece
 
 PIECES = {
     "green1": Piece("g", 1, Field("A", color="g")),

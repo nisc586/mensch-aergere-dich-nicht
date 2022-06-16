@@ -4,7 +4,7 @@ The game can be played with two to four players.
 
 Here is a figure of the board:
 
-![board](/Board.png)
+![board](./docs/Board.png)
 
 Green starts with one piece on field 1, red on 11, blue on 21, and yellow on 31.
 The players take turns rolling a dice and moving pieces forward.
@@ -20,7 +20,7 @@ The goal is to move all four pieces on the B fields.
 # Command Line Interface
 Here is a flow chart for the application.
 
-![UI flow chart](/MenschAergereDichNichtUI.png)
+![UI flow chart](./docs/MenschAergereDichNichtUI.png)
 
 Player colors are assigned automatically.
 There is no option for changing the order in which the players take turns.
@@ -47,4 +47,4 @@ The program only uses Python the standard library and pytest for testing.
 
 This is what the classes look like (roughly).
 
-![class diagram](/MenschAergereDichNicht.png)
+![class diagram](./docs/MenschAergereDichNicht.png)

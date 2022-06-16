@@ -1,0 +1,13 @@
+atomicwrites==1.4.0
+attrs==21.4.0
+build==0.8.0
+colorama==0.4.5
+iniconfig==1.1.1
+-e git+https://github.com/nisc586/mensch-aergere-dich-nicht.git@f21034a482f4d4d141544be8e7b75284e2e61782#egg=mensch_aergere_dich_nicht
+packaging==21.3
+pep517==0.12.0
+pluggy==1.0.0
+py==1.11.0
+pyparsing==3.0.9
+pytest==7.1.2
+tomli==2.0.1

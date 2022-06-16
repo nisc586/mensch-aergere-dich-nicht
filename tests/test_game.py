@@ -1,8 +1,8 @@
 import pytest
-from main import Player
-from game import Game
-from field import Field
-from piece import Piece
+from mensch.main import Player
+from mensch.game import Game
+from mensch.field import Field
+from mensch.piece import Piece
 
 
 def test_winner():

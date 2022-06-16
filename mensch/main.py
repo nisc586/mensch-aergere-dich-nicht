@@ -1,6 +1,6 @@
 from collections import namedtuple
 import random
-from game import Game
+from mensch.game import Game
 
 Player = namedtuple("Player", "name color")
 

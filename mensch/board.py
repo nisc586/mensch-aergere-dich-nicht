@@ -1,5 +1,5 @@
-from piece import Piece
-from field import Field
+from .piece import Piece
+from .field import Field
 from collections import defaultdict
 
 class Board():
