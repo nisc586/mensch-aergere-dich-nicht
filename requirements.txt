@@ -3,7 +3,6 @@ attrs==21.4.0
 build==0.8.0
 colorama==0.4.5
 iniconfig==1.1.1
--e git+https://github.com/nisc586/mensch-aergere-dich-nicht.git
 packaging==21.3
 pep517==0.12.0
 pluggy==1.0.0
