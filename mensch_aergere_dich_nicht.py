@@ -1,3 +1,4 @@
 from mensch.cli import CLI
+import sys
 
-CLI().main()
+sys.exit(CLI().main())
