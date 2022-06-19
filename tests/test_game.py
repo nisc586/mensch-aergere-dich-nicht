@@ -1,5 +1,5 @@
 import pytest
-from mensch.main import Player
+from mensch.cli import Player
 from mensch.game import Game
 from mensch.field import Field
 from mensch.piece import Piece

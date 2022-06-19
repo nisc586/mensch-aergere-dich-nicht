@@ -4,7 +4,7 @@ from mensch.game import Game
 
 Player = namedtuple("Player", "name color")
 
-class Main():
+class CLI():
     def __init__(self):
         player1 = Player("Alice", "g")
         player2 = Player("Bob", "r")
@@ -72,7 +72,7 @@ class Main():
             return
         self.players.discard(old_player)
         self.players.add(new_player)
-        print("Renamed:", old_player)
+        print("Renamed:", old_player, "to", new_player)
 
 
     def add_player(self, name):
@@ -113,8 +113,3 @@ class Main():
             print(player)
         print()
 
-
-
-if __name__ == "__main__":
-    main = Main()
-    main.main()

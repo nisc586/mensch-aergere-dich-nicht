@@ -1,23 +1,23 @@
 import pytest
-from mensch.main import Player, Main
+from mensch.cli import Player, CLI
 
 def test_rename(capsys):
-    main = Main()
+    main = CLI()
     main.rename_player("Alice", "Alex")
     out, err = capsys.readouterr()
     assert {Player("Alex", "g"), Player("Bob", "r")} == main.players
-    assert "Renamed: Player(name='Alice', color='g')\n" == out
+    assert "Renamed: Player(name='Alice', color='g') to Player(name='Alex', color='g')\n" == out
 
 
 def test_rename_no_such(capsys):
-    main = Main()
+    main = CLI()
     main.rename_player("Otto", "Oswald")
     out, err = capsys.readouterr()
     assert "No such player\n" == out
 
 
 def test_add(capsys):
-    main = Main()
+    main = CLI()
     main.add_player("Carl")
     out, err = capsys.readouterr()
     assert(
@@ -31,7 +31,7 @@ def test_add(capsys):
 
 
 def test_no_add(capsys):
-    main = Main()
+    main = CLI()
     main.players = {
         Player("Alice", "g"),
         Player("Bob", "r"),
@@ -44,7 +44,7 @@ def test_no_add(capsys):
 
 
 def test_remove(capsys):
-    main = Main()
+    main = CLI()
     main.players = {
         Player("Alice", "g"),
         Player("Bob", "r"),
@@ -58,20 +58,20 @@ def test_remove(capsys):
 
 
 def test_no_remove(capsys):
-    main = Main()
+    main = CLI()
     main.remove_player("Bob")
     out, er = capsys.readouterr()
     assert "Can't have less than 2 players\n" == out
 
 
 def test_random_color():
-    main = Main()
+    main = CLI()
     col = main.random_color()
     assert(("b" == col) or ("y" == col))
 
 
 def test_random_color_negative():
-    main = Main()
+    main = CLI()
     main.players = {
         Player("Alice", "g"),
         Player("Bob", "r"),

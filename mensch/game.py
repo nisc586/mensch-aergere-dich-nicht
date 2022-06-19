@@ -89,11 +89,3 @@ class Game():
             else:
                 print("Try again... or type 'quit' to quit the game, or 'show' to show the board.")
 
-
-if __name__ == "__main__":
-    from collections import namedtuple
-    Player = namedtuple("Player", "name color")
-    alice = Player("Alice", "g")
-    bob = Player("Bob", "r")
-    game = Game([alice, bob])
-    game.main()

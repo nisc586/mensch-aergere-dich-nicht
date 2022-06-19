@@ -16,8 +16,3 @@ class Piece():
 
     def __hash__(self):
         return hash(str(self))
-
-
-if __name__ == "__main__":
-    piece = Piece("g", 1, None)
-    print(piece)
