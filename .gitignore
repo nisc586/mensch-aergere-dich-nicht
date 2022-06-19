@@ -2,7 +2,8 @@
 .pytest_cache
 __pycache__
 
-# Pip File
+# Pip Files
+build
 *.egg-info
 
 # Virtual Env
