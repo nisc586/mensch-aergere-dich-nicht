@@ -1,4 +1,8 @@
 from mensch.cli import CLI
 import sys
 
-sys.exit(CLI().main())
+def main():
+    CLI.main()
+
+if __name__ == "__main__":
+    sys.exit(CLI().main())
